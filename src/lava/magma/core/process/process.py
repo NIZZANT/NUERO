@@ -318,7 +318,7 @@ class AbstractProcess(metaclass=ProcessPostInitCaller):
             p.propagate_folded_views()
 
     def run(self,
-            condition: AbstractRunCondition,
+            condition: ty.Optional[ty.Union[AbstractRunCondition, int]],
             run_cfg: ty.Optional[RunConfig] = None,
             compile_config: ty.Optional[ty.Dict[str, ty.Any]] = None):
         """Executes this and any connected Processes that form a Process
@@ -347,8 +347,10 @@ class AbstractProcess(metaclass=ProcessPostInitCaller):
 
         Parameters
         ----------
-        condition : AbstractRunCondition
-            Specifies for how long to run the Process.
+        condition : Optional[Union[AbstractRunCondition, int]], default=None
+            The condition that determines how long to run the process. If
+            condition is an int, runs for the specified number of timesteps.
+            If condition is None, runs until paused or stopped.
         run_cfg : RunConfig, optional
             Used by the compiler to select a ProcessModel for each Process.
             Must be provided when Processes have to be compiled, can be
