@@ -43,6 +43,7 @@ class AbstractLIF(AbstractProcess):
             **kwargs,
         )
 
+        self.shape = shape
         self.a_in = InPort(shape=shape)
         self.s_out = OutPort(shape=shape)
         self.u = Var(shape=shape, init=u)

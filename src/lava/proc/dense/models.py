@@ -11,6 +11,7 @@ from lava.magma.core.model.py.connection import (
 from lava.magma.core.sync.protocols.loihi_protocol import LoihiProtocol
 from lava.magma.core.model.py.ports import PyInPort, PyOutPort
 from lava.magma.core.model.py.type import LavaPyType
+from lava.magma.core.model.precision import Precision
 from lava.magma.core.resources import CPU
 from lava.magma.core.decorator import implements, requires, tag
 from lava.magma.core.model.py.model import PyLoihiProcessModel
@@ -60,13 +61,32 @@ class AbstractPyDenseModelBitAcc(PyLoihiProcessModel):
     it mimics Loihi behavior bit-by-bit.
     """
 
-    s_in: PyInPort = LavaPyType(PyInPort.VEC_DENSE, bool, precision=1)
-    a_out: PyOutPort = LavaPyType(PyOutPort.VEC_DENSE, np.int32, precision=16)
-    a_buff: np.ndarray = LavaPyType(np.ndarray, np.int32, precision=16)
+    s_in: PyInPort = LavaPyType(PyInPort.VEC_DENSE, bool,
+                                precision=Precision(is_signed=False,
+                                                    num_bits=1,
+                                                    implicit_shift=0))
+    a_out: PyOutPort = LavaPyType(PyOutPort.VEC_DENSE, np.int32,
+                                  precision=Precision(is_signed=True,
+                                                      num_bits=16,
+                                                      implicit_shift=0))
+    a_buff: np.ndarray = LavaPyType(np.ndarray, np.int32,
+                                    precision=Precision(is_signed=True,
+                                                        num_bits=16,
+                                                        implicit_shift=0))
     # weights is a 2D matrix of form (num_flat_output_neurons,
     # num_flat_input_neurons) in C-order (row major).
-    weights: np.ndarray = LavaPyType(np.ndarray, np.int32, precision=8)
-    num_message_bits: np.ndarray = LavaPyType(np.ndarray, int, precision=5)
+    weights: np.ndarray = LavaPyType(np.ndarray, np.int32,
+                                     precision=Precision(is_signed=True,
+                                                         num_bits=8,
+                                                         implicit_shift=0),
+                                     num_bits_exp=3, constant=True,
+                                     exp_var='weight_exp')
+    num_message_bits: np.ndarray = LavaPyType(np.ndarray, int,
+                                              meta_parameter=True,
+                                              precision=Precision(
+                                                  is_signed=False,
+                                                  num_bits=5,
+                                                  implicit_shift=0))
 
     def __init__(self, proc_params):
         super().__init__(proc_params)

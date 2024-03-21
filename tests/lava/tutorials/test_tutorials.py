@@ -1,4 +1,4 @@
-# Copyright (C) 2022 Intel Corporation
+# Copyright (c) 2021-22 intel corporation
 # SPDX-License-Identifier: BSD-3-Clause
 # See: https://spdx.org/licenses/
 
@@ -217,10 +217,17 @@ class TestTutorials(unittest.TestCase):
         )
 
     @unittest.skipIf(system_name != "linux", "Tests work on linux")
-    def test_end_to_end_02_ei_network(self):
-        """Test tutorial end to end 02 E/I network."""
+    def test_end_to_end_02_oxford(self):
+        """Test tutorial end to end 02 Oxford."""
         self._run_notebook(
-            "tutorial02_excitatory_inhibitory_network.ipynb",
+            "tutorial02_oxford_input_transformation.ipynb", e2e_tutorial=True
+        )
+
+    @unittest.skip('Running the notebook takes too long')
+    def test_end_to_end_03_ei_network(self):
+        """Test tutorial end to end 03 E/I network."""
+        self._run_notebook(
+            "tutorial03_excitatory_inhibitory_network.ipynb",
             e2e_tutorial=True
         )
 
@@ -268,6 +275,11 @@ class TestTutorials(unittest.TestCase):
     def test_in_depth_09_custom_learning_rules(self):
         """Test tutorial custom learning rules."""
         self._run_notebook("tutorial09_custom_learning_rules.ipynb")
+
+    @unittest.skipIf(system_name != "linux", "Tests work on linux")
+    def test_in_depth_10_float2fixed_conversion(self):
+        """Test floating- to fixed-point conversion.."""
+        self._run_notebook("tutorial10_float2fixed_conversion.ipynb")
 
     @unittest.skipIf(system_name != "linux", "Tests work on linux")
     def test_in_depth_three_factor_learning_01(self):
